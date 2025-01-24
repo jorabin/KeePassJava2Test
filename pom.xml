@@ -11,6 +11,7 @@
 	<modules>
 		<module>V2.2.3</module>
 		<module>V2.2.4</module>
+		<module>V3.0.0</module>
 	</modules>
 
 	<properties>
