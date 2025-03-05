@@ -7,23 +7,11 @@ import java.io.*;
 
 public class Issue78 {
 
-    static PrintStream out = new SystemOutWrapper(System.out);
-
     /**
      * WHen we save a database to an output stream it closes it, we want
      * System.out to remain open so we disable closing
      */
-    static class SystemOutWrapper extends PrintStream {
-
-        public SystemOutWrapper(OutputStream out) {
-            super(out);
-        }
-
-        @Override
-        public void close() {
-            // noop
-        }
-    }
+    static PrintStream out = new PrintStream(System.out) {public void close() {}};
 
     public static void main(String[] args) throws Exception {
         test();
