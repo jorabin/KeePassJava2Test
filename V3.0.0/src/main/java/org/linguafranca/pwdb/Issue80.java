@@ -3,6 +3,7 @@ package org.linguafranca.pwdb;
 import org.linguafranca.pwdb.format.KdbxCredentials;
 import org.linguafranca.pwdb.kdbx.jackson.KdbxDatabase;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -12,13 +13,12 @@ import static org.linguafranca.pwdb.Entry.STANDARD_PROPERTY_NAME.PASSWORD;
 
 public class Issue80 {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         KdbxDatabase database = openDatabase(args[0], args[1]);
-        assert database != null;
     }
 
     // KdbxDatabase become the standard database type in V3.0.0
-    private static KdbxDatabase openDatabase(String databasePath, String password) {
+    private static KdbxDatabase openDatabase(String databasePath, String password) throws IOException {
         try (InputStream inputStream = Files.newInputStream(Paths.get(databasePath))) {
 
             // use KdbxCredentials  in V3.0.0
@@ -50,10 +50,6 @@ public class Issue80 {
                 System.out.println("No entries found.");
             }
             return database;
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Failed to open the database.");
-            return null;
         }
     }
 }

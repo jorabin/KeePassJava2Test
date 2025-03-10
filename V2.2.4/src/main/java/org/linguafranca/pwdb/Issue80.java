@@ -4,6 +4,7 @@ import org.linguafranca.pwdb.kdbx.jackson.JacksonDatabase;
 import org.linguafranca.pwdb.kdbx.KdbxCreds;
 import org.linguafranca.pwdb.kdbx.jackson.JacksonEntry;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -13,12 +14,11 @@ import static org.linguafranca.pwdb.Entry.STANDARD_PROPERTY_NAME_PASSWORD;
 
 public class Issue80 {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         JacksonDatabase database = openDatabase(args[0], args[1]);
-        assert database != null;
     }
 
-    private static JacksonDatabase openDatabase(String databasePath, String password) {
+    private static JacksonDatabase openDatabase(String databasePath, String password) throws IOException {
         try (InputStream inputStream = Files.newInputStream(Paths.get(databasePath))) {
 
             // use KdbxCreds for credentials - KdbxCredentials is re-introduced in V3.0.0
@@ -51,10 +51,6 @@ public class Issue80 {
                 System.out.println("No entries found.");
             }
             return database;
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Failed to open the database.");
-            return null;
         }
     }
 }
