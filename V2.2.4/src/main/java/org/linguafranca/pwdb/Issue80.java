@@ -30,7 +30,7 @@ public class Issue80 {
             // List<? extends JacksonEntry> entries = database.findEntries("something");
 
             // to find entries whose title (just the title) contains "something" do something like:
-            // generics are not necessary in V3.0.0
+            // generics will be simplified in V3.0.0
             List<? extends JacksonEntry> entries = database.findEntries(e -> e.getTitle().toLowerCase().contains("something"));
             for (JacksonEntry entry : entries) {
                 System.out.println(entry.getTitle());
@@ -39,13 +39,14 @@ public class Issue80 {
             if (!entries.isEmpty()) {
                 System.out.println("Found " + entries.size() + " entries.");
                 JacksonEntry entry = entries.get(0);
-                System.out.println(entry.getPropertyValue(STANDARD_PROPERTY_NAME_PASSWORD).getValueAsString());
+                System.out.println("Password was: " + entry.getPropertyValue(STANDARD_PROPERTY_NAME_PASSWORD).getValueAsString());
 
                 // set a new password on the first entry
                 // use PropertyValueStrategy.newProtected() to create a protected property value
                 // this all becomes a little less verbose in V3.0.0
                 PropertyValue propertyValue = database.getPropertyValueStrategy().newProtected().of("new password");
                 entry.setPropertyValue(STANDARD_PROPERTY_NAME_PASSWORD, propertyValue);
+                System.out.println("Password is now: " + entry.getPropertyValue(STANDARD_PROPERTY_NAME_PASSWORD).getValueAsString());
             } else {
                 System.out.println("No entries found.");
             }
