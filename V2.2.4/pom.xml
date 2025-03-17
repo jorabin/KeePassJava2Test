@@ -21,21 +21,8 @@
 		<dependency>
 			<groupId>org.linguafranca.pwdb</groupId>
 			<artifactId>KeePassJava2-jackson</artifactId>
-			<version>2.2.4-SNAPSHOT</version>
+			<version>2.2.4</version>
 		</dependency>
 	</dependencies>
-
-	<repositories>
-		<repository>
-			<id>oss.sonatype.org-snapshot</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
 
 </project>
