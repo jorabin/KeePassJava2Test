@@ -1,6 +1,6 @@
 package org.linguafranca.pwdb;
 
-import org.linguafranca.pwdb.format.KdbxCreds;
+import org.linguafranca.pwdb.format.KdbxCredentials;
 import org.linguafranca.pwdb.kdbx.jackson.KdbxDatabase;
 
 import java.io.IOException;
@@ -12,7 +12,7 @@ public class Main {
     }
 
     private void run() {
-        KdbxCreds credentials = new KdbxCreds("123".getBytes());
+        KdbxCredentials credentials = new KdbxCredentials("123".getBytes());
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("Database-4.1-123.kdbx");
         try {
             Database database = KdbxDatabase.load(credentials, inputStream);
