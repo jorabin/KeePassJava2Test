@@ -1,11 +1,12 @@
 package org.linguafranca.pwdb;
 
-import org.linguafranca.pwdb.kdbx.KdbxCreds;
-import org.linguafranca.pwdb.kdbx.jackson.JacksonDatabase;
+import org.linguafranca.pwdb.format.KdbxCredentials;
+import org.linguafranca.pwdb.kdbx.jackson.KdbxDatabase;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Load the sample database and print it as XML.
@@ -16,9 +17,9 @@ import java.io.InputStream;
  */
 public class Xml {
     public static void main(String[] args) throws IOException {
-        KdbxCreds credentials = new KdbxCreds("123".getBytes());
+        KdbxCredentials credentials = new KdbxCredentials("123".getBytes());
         try (InputStream inputStream = Xml.class.getClassLoader().getResourceAsStream("Database-4.1-123.kdbx")) {
-            Database database = JacksonDatabase.load(credentials, inputStream);
+            Database database = KdbxDatabase.load(credentials, inputStream);
             System.out.println(toXml(database));
         }
     }
@@ -29,7 +30,7 @@ public class Xml {
     static String toXml(Database database) throws IOException {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             database.save(new StreamFormat.None(), new Credentials.None(), outputStream);
-            return outputStream.toString("UTF-8");
+            return outputStream.toString(StandardCharsets.UTF_8);
         }
     }
 }

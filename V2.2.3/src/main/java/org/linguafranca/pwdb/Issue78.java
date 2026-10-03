@@ -3,22 +3,19 @@ package org.linguafranca.pwdb;
 import org.linguafranca.pwdb.kdbx.KdbxCreds;
 import org.linguafranca.pwdb.kdbx.jackson.JacksonDatabase;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
+/**
+ * Issue 78: check the XML of a new database, and of the same database after saving and reloading it
+ */
 public class Issue78 {
 
-    /**
-     * WHen we save a database to an output stream it closes it, we want
-     * System.out to remain open so we disable closing
-     */
-    static PrintStream out = new PrintStream(System.out) {public void close() {}};
-
-    public static void main(String[] args) throws Exception {
-        test();
-    }
-
-    // from the Issue
-    static void test() throws IOException {
+    public static void main(String[] args) throws IOException {
         // Create new (empty) KeePass database
         Database database = new JacksonDatabase();
         database.setName("Test KeePass");
@@ -37,23 +34,24 @@ public class Issue78 {
         newEntry.setProperty(Entry.STANDARD_PROPERTY_NAME_PASSWORD, "password123");
         newGroup.addEntry(newEntry);
 
-        // save the XML and check the format
-        database.save(new StreamFormat.None(), null, out);
+        // check the format of the XML
+        System.out.println(Xml.toXml(database));
 
         // Set passphrase as master password
-        KdbxCreds creds = new KdbxCreds("123456".getBytes());
+        KdbxCreds credentials = new KdbxCreds("123456".getBytes());
 
-        // Save KeePass database to .kdbx file
-        try (FileOutputStream outputStream = new FileOutputStream("test.kdbx")) {
-            database.save(creds, outputStream);
+        // Save KeePass database to a .kdbx file
+        Path path = Paths.get("target", "Issue78.kdbx");
+        Files.createDirectories(path.getParent());
+        try (OutputStream outputStream = Files.newOutputStream(path)) {
+            database.save(credentials, outputStream);
         }
 
-        out.println("=== Reload ===");
-        // reload the database
-        try (FileInputStream inputStream = new FileInputStream("test.kdbx")) {
-            JacksonDatabase database2 = JacksonDatabase.load(creds, inputStream);
-            // review XML to verify it picks up default values
-            database2.save(new StreamFormat.None(), null, out);
+        System.out.println("=== Reload ===");
+        try (InputStream inputStream = Files.newInputStream(path)) {
+            Database database2 = JacksonDatabase.load(credentials, inputStream);
+            // check the XML picks up default values
+            System.out.println(Xml.toXml(database2));
         }
     }
 }
