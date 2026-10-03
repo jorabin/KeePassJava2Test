@@ -20,7 +20,8 @@ cd V3.0.0
 mvn exec:java -Dexec.mainClass=org.linguafranca.pwdb.Main
 ```
 
-The modules for 3.x need Java 11 or later.
+Build with JDK 11 or later (the build checks). Each module compiles for the Java version its
+KeePassJava2 release supports: 8 for 2.x, 11 for 3.x. In an IDE, set the project SDK to 11 or later too.
 
 Downloaded jars are kept in `.m2/repository` (which git ignores). To check
 against Central from scratch, delete it first:
